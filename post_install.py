@@ -2,7 +2,7 @@
 """Post-install configuration for Claude Code devcontainer.
 
 Runs on container creation to set up:
-- Onboarding bypass (when CLAUDE_CODE_OAUTH_TOKEN is set)
+- Onboarding bypass (when ANTHROPIC_AUTH_TOKEN is set)
 - Claude settings (bypassPermissions mode)
 - Tmux configuration (200k history, mouse support)
 - Directory ownership fixes for mounted volumes
@@ -17,70 +17,53 @@ from pathlib import Path
 
 
 def setup_onboarding_bypass():
-    """Bypass the interactive onboarding wizard when CLAUDE_CODE_OAUTH_TOKEN is set.
+    """Bypass the interactive onboarding and login when ANTHROPIC_AUTH_TOKEN is set.
 
-    Runs `claude -p` to seed ~/.claude.json with auth state. The subprocess
-    writes the config file during startup before the API call completes, so
-    a timeout is expected and acceptable. After the subprocess finishes (or
-    times out), we check whether ~/.claude.json was populated and only then
-    set hasCompletedOnboarding.
+    Writes the auth token to credentials files so both interactive and
+    non-interactive modes can authenticate without prompting for login.
+    Also sets hasCompletedOnboarding in ~/.claude.json to skip the onboarding wizard.
 
     Workaround for https://github.com/anthropics/claude-code/issues/8938.
     """
-    token = os.environ.get("CLAUDE_CODE_OAUTH_TOKEN", "").strip()
+    token = os.environ.get("ANTHROPIC_AUTH_TOKEN", "").strip()
     if not token:
         print(
-            "[post_install] No CLAUDE_CODE_OAUTH_TOKEN set, skipping onboarding bypass",
+            "[post_install] No ANTHROPIC_AUTH_TOKEN set, skipping onboarding bypass",
             file=sys.stderr,
         )
         return
 
+    # Write credentials files so interactive mode finds stored auth
+    credentials = {
+        "claudeAiOauth": {
+            "accessToken": token,
+            "refreshToken": token,
+            "expiresAt": 9999999999999,
+            "scopes": ["user:inference", "user:profile"],
+        }
+    }
+
+    claude_dir = Path.home() / ".claude"
+    config_claude_dir = Path.home() / ".config" / "claude"
+    claude_dir.mkdir(parents=True, exist_ok=True)
+    config_claude_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write to all locations where Claude Code may look for credentials
+    cred_paths = [
+        claude_dir / ".credentials.json",
+        claude_dir / "credentials.json",
+        config_claude_dir / ".credentials.json",
+    ]
+    for cred_path in cred_paths:
+        cred_path.write_text(json.dumps(credentials, indent=2) + "\n", encoding="utf-8")
+        print(f"[post_install] Credentials written: {cred_path}", file=sys.stderr)
+
+    # Set hasCompletedOnboarding in ~/.claude.json
     claude_json = Path.home() / ".claude.json"
-
-    print("[post_install] Running claude -p to populate auth state...", file=sys.stderr)
-    try:
-        result = subprocess.run(
-            ["claude", "-p", "ok"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        if result.returncode != 0:
-            print(
-                f"[post_install] claude -p exited {result.returncode}: "
-                f"{result.stderr.strip()}",
-                file=sys.stderr,
-            )
-    except subprocess.TimeoutExpired:
-        print(
-            "[post_install] claude -p timed out (expected on cold start)",
-            file=sys.stderr,
-        )
-    except (FileNotFoundError, OSError) as e:
-        print(
-            f"[post_install] Warning: could not run claude ({e}) — "
-            "onboarding bypass skipped",
-            file=sys.stderr,
-        )
-        return
-
-    if not claude_json.exists():
-        print(
-            f"[post_install] Warning: {claude_json} not created by claude -p — "
-            "onboarding bypass skipped",
-            file=sys.stderr,
-        )
-        return
-
     config: dict = {}
-    try:
-        config = json.loads(claude_json.read_text())
-    except json.JSONDecodeError as e:
-        print(
-            f"[post_install] Warning: {claude_json} has invalid JSON ({e}), "
-            "starting fresh",
-            file=sys.stderr,
-        )
+    if claude_json.exists():
+        with contextlib.suppress(json.JSONDecodeError):
+            config = json.loads(claude_json.read_text())
 
     config["hasCompletedOnboarding"] = True
 

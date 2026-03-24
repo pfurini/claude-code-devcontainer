@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 /Users/paolof/.claude/skills/read-github/scripts/gitmcp.py fetch-docs deluan/zsh-in-docker)",
+      "Bash(devcontainer build:*)",
+      "WebSearch",
+      "Bash(gh issue:*)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh api:*)"
+    ]
+  }
+}

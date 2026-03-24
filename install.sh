@@ -122,11 +122,15 @@ extract_mounts_to_file() {
   custom_mounts=$(jq -c '
     .mounts // [] | map(
       select(
+        (contains("target=/var/run/docker.sock") | not) and
         (contains("target=/commandhistory,") | not) and
         (contains("target=/home/vscode/.claude,") | not) and
         (contains("target=/home/vscode/.config/gh,") | not) and
         (contains("target=/home/vscode/.gitconfig,") | not) and
-        (contains("target=/workspace/.devcontainer,") | not)
+        (contains("target=/workspace/.devcontainer,") | not) and
+        (contains("target=/home/vscode/.agents,") | not) and
+        (contains("target=/home/vscode/.claude/CLAUDE.md,") | not) and
+        (contains("target=/home/vscode/.claude/skills,") | not)
       )
     ) | if length > 0 then . else empty end
   ' "$devcontainer_json" 2>/dev/null) || true

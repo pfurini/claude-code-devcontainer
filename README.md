@@ -114,21 +114,51 @@ cd client-repo-1
 claude          # Ready to work
 ```
 
-## Token-Based Auth (Headless)
+## Authentication
 
-For headless servers or to skip the interactive login wizard:
+Two options to authenticate Claude Code inside the container:
 
-```bash
-claude setup-token                          # run on host, one-time
-export CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-...
-devc rebuild                                # rebuilds with token
-```
+### Option A: Copy Credentials from Host (Recommended)
 
-The token is forwarded into the container. On each container creation, `post_install.py` runs a one-shot auth handshake so `claude` starts without the login wizard.
+1. On your host, log in to Claude Code if you haven't already:
 
-This works around Claude Code's interactive onboarding wizard always showing in containers, even with valid credentials ([#8938](https://github.com/anthropics/claude-code/issues/8938)).
+   ```bash
+   claude
+   ```
 
-If you don't set a token, the interactive login flow works as before.
+2. Copy the credentials file into the container's Claude config volume:
+
+   ```bash
+   devc exec bash -c 'cat > ~/.claude/.credentials.json' < ~/.claude/.credentials.json
+   ```
+
+3. Inside the container, run `claude` — it will use the copied credentials.
+
+### Option B: Auth Token via Environment Variable
+
+1. On your host, generate a token:
+
+   ```bash
+   claude setup-token
+   ```
+
+2. Export the token and rebuild:
+
+   ```bash
+   export ANTHROPIC_AUTH_TOKEN=sk-ant-oat01-...
+   devc rebuild
+   ```
+
+   The token is forwarded into the container via `remoteEnv`. On container creation, `post_install.py` writes it to the credentials files so `claude` starts without the login wizard.
+
+   > **Note:** `ANTHROPIC_AUTH_TOKEN` as an environment variable is currently rejected by the API at runtime ([401 error](https://github.com/anthropics/claude-code/issues/8938)). After the container starts, unset it so Claude falls back to the credentials file written by `post_install.py`:
+   >
+   > ```bash
+   > unset ANTHROPIC_AUTH_TOKEN
+   > claude
+   > ```
+
+If neither option is used, the interactive login flow works as before (`claude` will prompt you to log in).
 
 ## CLI Helper Commands
 
@@ -183,6 +213,21 @@ This adds a bind mount to `devcontainer.json` and recreates the container. Exist
 
 > **Security note:** Avoid mounting large host directories (e.g., `$HOME`). Every mounted path is writable from inside the container unless `--readonly` is specified, which undermines the filesystem isolation this project provides.
 
+## Browser Access (noVNC)
+
+The devcontainer includes a lightweight desktop accessible via your browser, useful for manual authentication flows (OAuth, SSO) or inspecting web apps visually.
+
+After the container starts, open **http://localhost:6080** in your host browser. The default password is `vscode`.
+
+To launch Chromium inside the desktop:
+
+```bash
+# From the container shell
+chromium-browser &
+```
+
+> **Tip:** The desktop runs Fluxbox window manager via TigerVNC + noVNC. No additional software is needed on your host — just a browser.
+
 ## Network Isolation
 
 By default, containers have full outbound network access. For stricter security, use iptables to restrict network access.
@@ -226,9 +271,10 @@ The container auto-configures `bypassPermissions` mode—Claude runs commands wi
 
 | Component | Details |
 |-----------|---------|
-| Base | Ubuntu 24.04, Node.js 22, Python 3.13 + uv, zsh |
+| Base | Ubuntu 24.04, Node.js 24, Python 3.13 + uv, zsh |
 | User | `vscode` (passwordless sudo), working dir `/workspace` |
-| Tools | `rg`, `fd`, `tmux`, `fzf`, `delta`, `iptables`, `ipset` |
+| Tools | `rg`, `fd`, `tmux`, `fzf`, `delta`, `iptables`, `ipset`, `agent-browser` |
+| Browser | Chromium (Playwright) + noVNC desktop on port 6080 |
 | Volumes (survive rebuilds) | Command history (`/commandhistory`), Claude config (`~/.claude`), GitHub CLI auth (`~/.config/gh`) |
 | Host mounts | `~/.gitconfig` (read-only), `.devcontainer/` (read-only) |
 | Auto-configured | [anthropics](https://github.com/anthropics/claude-code-plugins) + [trailofbits](https://github.com/trailofbits/claude-code-plugins) skills, git-delta |
@@ -272,12 +318,12 @@ uv run --with requests py.py  # Ad-hoc dependency
 Build the image manually:
 
 ```bash
-devcontainer build --workspace-folder .
+devcontainer build --config devcontainer.json
 ```
 
 Test the container:
 
 ```bash
-devcontainer up --workspace-folder .
-devcontainer exec --workspace-folder . zsh
+devcontainer up --config devcontainer.json
+devcontainer exec --config devcontainer.json zsh
 ```
