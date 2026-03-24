@@ -35,7 +35,7 @@ There is no test suite. Changes should be validated by running the container loc
 - Sync: `cmd_sync()` discovers running devcontainers via Docker labels and copies Claude session data
 - Destroy: `discover_resources()` finds container/volume/image triplets for safe cleanup
 
-**`Dockerfile`** — Ubuntu 24.04 base, installs Node 24 (fnm), Python 3.13 (uv), Claude Code, and shell tools (zsh, ripgrep, fzf, tmux).
+**`Dockerfile`** — Ubuntu 24.04 base, installs Node 24 (fnm), Python 3.13 (uv), Homebrew, Claude Code, and shell tools (zsh, ripgrep, fzf, tmux).
 
 **`post_install.py`** — runs once after container creation. Handles:
 - Auth token bypass (`ANTHROPIC_AUTH_TOKEN` → writes credentials files)
@@ -44,7 +44,7 @@ There is no test suite. Changes should be validated by running the container loc
 
 **`devcontainer.json`** — defines volumes (`bashhistory`, `config`, `gh`), environment passthrough (`ANTHROPIC_AUTH_TOKEN`), and mounts `.devcontainer/` read-only (security: prevents container escape via template modification).
 
-**`.claude/settings.json`** — denies `Read(.devcontainer/**)` to prevent the container from reading its own config files.
+**`.claude/settings.json`** — denies `Read(.devcontainer/**)` to prevent the container from reading its own config files. Note: there is no `.devcontainer/` directory in this repo — the deny rule applies inside created devcontainers, not to this source repo.
 
 ## Security Constraints
 
