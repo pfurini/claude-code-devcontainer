@@ -116,16 +116,20 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$FNM_D
   fnm install ${NODE_VERSION} && \
   fnm default ${NODE_VERSION}
 
-# Install agent-browser (headless browser automation CLI)
+# Install Chromium for agent-browser via Playwright
 RUN export PATH="$FNM_DIR:$PATH" && \
   eval "$(fnm env)" && \
-  npm install -g agent-browser @openai/codex && \
-  agent-browser install --with-deps
+  npx playwright install chromium && \
+  CHROMIUM_PATH="$(find /home/vscode/.cache/ms-playwright -type f -name 'chrome' -o -name 'chromium' | head -1)" && \
+  echo "Found chromium at: $CHROMIUM_PATH" && \
+  ls -la "$CHROMIUM_PATH" && \
+  ln -s "$CHROMIUM_PATH" /home/vscode/.chromium
+ENV AGENT_BROWSER_EXECUTABLE_PATH="/home/vscode/.chromium"
 
 # Install Homebrew
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-RUN brew install gcloud-cli firebase-cli vercel-cli gh postgresql@17
+ENV PATH="/home/linuxbrew/.linuxbrew/share/google-cloud-sdk/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+RUN brew install gcloud-cli firebase-cli vercel-cli gh postgresql@17 agent-browser
 
 # Install Oh My Zsh
 ARG ZSH_IN_DOCKER_VERSION=1.2.1

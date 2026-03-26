@@ -9,6 +9,9 @@ export FNM_DIR="$HOME/.fnm"
 export PATH="$FNM_DIR:$PATH"
 eval "$(fnm env --use-on-cd)"
 
+# agent-browser (Chromium path)
+export AGENT_BROWSER_EXECUTABLE_PATH="/home/vscode/.chromium"
+
 # History settings
 export HISTFILE=/commandhistory/.zsh_history
 export HISTSIZE=200000
