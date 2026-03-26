@@ -273,7 +273,7 @@ The container auto-configures `bypassPermissions` mode—Claude runs commands wi
 |-----------|---------|
 | Base | Ubuntu 24.04, Node.js 24, Python 3.13 + uv, zsh |
 | User | `vscode` (passwordless sudo), working dir `/workspace` |
-| Tools | `rg`, `fd`, `tmux`, `fzf`, `delta`, `iptables`, `ipset`, `agent-browser` |
+| Tools | `rg`, `fd`, `tmux`, `fzf`, `delta`, `iptables`, `ipset`, `agent-browser`, `gcloud`, `firebase`, `vercel`, `gh`, `psql` |
 | Browser | Chromium (Playwright) + noVNC desktop on port 6080 |
 | Volumes (survive rebuilds) | Command history (`/commandhistory`), Claude config (`~/.claude`), GitHub CLI auth (`~/.config/gh`) |
 | Host mounts | `~/.gitconfig` (read-only), `.devcontainer/` (read-only) |

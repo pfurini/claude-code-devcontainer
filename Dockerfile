@@ -119,12 +119,13 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$FNM_D
 # Install agent-browser (headless browser automation CLI)
 RUN export PATH="$FNM_DIR:$PATH" && \
   eval "$(fnm env)" && \
-  npm install -g agent-browser && \
+  npm install -g agent-browser @openai/codex && \
   agent-browser install --with-deps
 
 # Install Homebrew
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+RUN brew install gcloud-cli firebase-cli vercel-cli gh postgresql@17
 
 # Install Oh My Zsh
 ARG ZSH_IN_DOCKER_VERSION=1.2.1

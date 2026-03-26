@@ -35,7 +35,7 @@ There is no test suite. Changes should be validated by running the container loc
 - Sync: `cmd_sync()` discovers running devcontainers via Docker labels and copies Claude session data
 - Destroy: `discover_resources()` finds container/volume/image triplets for safe cleanup
 
-**`Dockerfile`** — Ubuntu 24.04 base, installs Node 24 (fnm), Python 3.13 (uv), Homebrew, Claude Code, and shell tools (zsh, ripgrep, fzf, tmux).
+**`Dockerfile`** — Ubuntu 24.04 base, installs Node 24 (fnm), Python 3.13 (uv), Homebrew, Claude Code, CLI tools (gcloud, firebase, vercel, postgresql@17), and shell tools (zsh, ripgrep, fzf, tmux).
 
 **`post_install.py`** — runs once after container creation. Handles:
 - Auth token bypass (`ANTHROPIC_AUTH_TOKEN` → writes credentials files)
