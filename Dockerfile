@@ -128,6 +128,14 @@ RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.co
 ENV PATH="/home/linuxbrew/.linuxbrew/share/google-cloud-sdk/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
 RUN brew install gcloud-cli firebase-cli vercel-cli gh postgresql@17 agent-browser
 
+# Install claude-preset CLI
+COPY --chown=vscode:vscode cli/ /opt/claude-preset/
+RUN export PATH="$FNM_DIR:$PATH" && \
+  eval "$(fnm env)" && \
+  cd /opt/claude-preset && \
+  npm install --omit=dev && \
+  npm link
+
 # Install Oh My Zsh
 ARG ZSH_IN_DOCKER_VERSION=1.2.1
 RUN sh -c "$(curl -fsSL https://github.com/deluan/zsh-in-docker/releases/download/v${ZSH_IN_DOCKER_VERSION}/zsh-in-docker.sh)" -- \
