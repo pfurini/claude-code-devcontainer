@@ -5,7 +5,7 @@
 
 ## Current Phase
 Phase: 2 of 3 (Plugin Support)
-Plans: 0
+Plans: 0/3
 Progress: 0%
 Status: pending
 
