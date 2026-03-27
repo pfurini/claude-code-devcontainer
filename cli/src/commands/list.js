@@ -10,8 +10,7 @@ export async function listCommand() {
   const workspaceRoot = process.cwd();
   const state = await loadState(workspaceRoot);
 
-  const dir = new URL('.', presetsDir);
-  const files = await readdir(dir);
+  const files = await readdir(presetsDir);
   const presetFiles = files.filter((f) => f.endsWith('.json'));
 
   if (presetFiles.length === 0) {
@@ -22,16 +21,21 @@ export async function listCommand() {
   console.log('\nAvailable presets:\n');
 
   for (const file of presetFiles) {
-    const filePath = new URL(file, presetsDir);
-    const raw = await readFile(filePath, 'utf8');
-    const preset = JSON.parse(raw);
-    const appliedEntry = state.applied.find((e) => e.name === preset.name);
+    try {
+      const filePath = new URL(file, presetsDir);
+      const raw = await readFile(filePath, 'utf8');
+      const preset = JSON.parse(raw);
+      const appliedEntry = state.applied.find((e) => e.name === preset.name);
 
-    if (appliedEntry) {
-      const date = new Date(appliedEntry.appliedAt).toLocaleDateString();
-      console.log(`  ${preset.name} — ${preset.description} [applied ${date}]`);
-    } else {
-      console.log(`  ${preset.name} — ${preset.description}`);
+      if (appliedEntry) {
+        const date = new Date(appliedEntry.appliedAt).toLocaleDateString();
+        console.log(`  ${preset.name} — ${preset.description} [applied ${date}]`);
+      } else {
+        console.log(`  ${preset.name} — ${preset.description}`);
+      }
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
+      console.warn(`Warning: skipped preset file "${file}": ${detail}`);
     }
   }
 

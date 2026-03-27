@@ -71,7 +71,9 @@ export async function ensureGitignore(workspaceRoot) {
     // .gitignore doesn't exist yet
   }
 
-  if (content.includes(entry)) return;
+  const lines = content.length === 0 ? [] : content.split(/\r\n|\n|\r/);
+  const alreadyListed = lines.some((line) => line.trim() === entry);
+  if (alreadyListed) return;
 
   const separator = content.length > 0 && !content.endsWith('\n') ? '\n' : '';
   await writeFile(gitignorePath, content + separator + entry + '\n');

@@ -21,8 +21,7 @@ async function loadPreset(name) {
  * List all available preset names by scanning the presets directory.
  */
 export async function listAvailablePresets() {
-  const dir = new URL('.', presetsDir);
-  const files = await readdir(dir);
+  const files = await readdir(presetsDir);
   return files
     .filter((f) => f.endsWith('.json'))
     .map((f) => f.replace(/\.json$/, ''));

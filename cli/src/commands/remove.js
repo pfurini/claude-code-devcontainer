@@ -20,22 +20,30 @@ export async function removeCommand(presetName) {
 
   const snapshot = entry.snapshot;
 
-  if (snapshot.settings) {
-    await removePresetSettings(workspaceRoot, snapshot.settings);
-  }
+  try {
+    if (snapshot.settings) {
+      await removePresetSettings(workspaceRoot, snapshot.settings);
+    }
 
-  if (snapshot.mcpServers && Object.keys(snapshot.mcpServers).length > 0) {
-    await removePresetMcp(workspaceRoot, snapshot.mcpServers);
-  }
+    if (snapshot.mcpServers && Object.keys(snapshot.mcpServers).length > 0) {
+      await removePresetMcp(workspaceRoot, snapshot.mcpServers);
+    }
 
-  if (snapshot.claudeMd) {
-    await removePresetClaudeMd(workspaceRoot, snapshot.claudeMd);
-  }
+    if (snapshot.claudeMd) {
+      await removePresetClaudeMd(workspaceRoot, snapshot.claudeMd);
+    }
 
-  if (snapshot.skills && snapshot.skills.length > 0) {
-    await removePresetSkills(workspaceRoot, snapshot.skills);
-  }
+    if (snapshot.skills && snapshot.skills.length > 0) {
+      await removePresetSkills(workspaceRoot, snapshot.skills);
+    }
 
-  await saveState(workspaceRoot, state);
-  console.log(`Removed preset "${presetName}".`);
+    await saveState(workspaceRoot, state);
+    console.log(`Removed preset "${presetName}".`);
+  } catch (err) {
+    // Removal failed - re-add entry to preserve state consistency
+    state.applied.push(entry);
+    await saveState(workspaceRoot, state);
+    console.error(`Error removing preset "${presetName}": ${err.message}`);
+    process.exitCode = 1;
+  }
 }

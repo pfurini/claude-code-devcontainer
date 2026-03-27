@@ -5,8 +5,7 @@
   "settings": {
     "permissions": {
       "allow": [
-        "Bash(npx convex *)",
-        "Bash(npx convex dev *)"
+        "Bash(npx convex *)"
       ]
     }
   },

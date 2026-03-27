@@ -8,6 +8,7 @@ import { listCommand } from './commands/list.js';
 import { resetCommand } from './commands/reset.js';
 import { loadState, isApplied } from './lib/state.js';
 import { readFile } from 'node:fs/promises';
+import pkg from '../package.json' with { type: 'json' };
 
 const presetsDir = new URL('../presets/', import.meta.url);
 
@@ -26,20 +27,21 @@ async function interactiveMode() {
     return;
   }
 
-  // Build options with descriptions and applied status
-  const options = [];
-  for (const name of available) {
-    const filePath = new URL(`${name}.json`, presetsDir);
-    const raw = await readFile(filePath, 'utf8');
-    const preset = JSON.parse(raw);
-    const applied = isApplied(state, name);
-    const label = applied ? `${preset.name} (applied)` : preset.name;
-    options.push({
-      value: name,
-      label,
-      hint: preset.description,
-    });
-  }
+  // Build options with descriptions and applied status (parallel reads, order matches `available`)
+  const options = await Promise.all(
+    available.map(async (name) => {
+      const filePath = new URL(`${name}.json`, presetsDir);
+      const raw = await readFile(filePath, 'utf8');
+      const preset = JSON.parse(raw);
+      const applied = isApplied(state, name);
+      const label = applied ? `${preset.name} (applied)` : preset.name;
+      return {
+        value: name,
+        label,
+        hint: preset.description,
+      };
+    }),
+  );
 
   const selected = await multiselect({
     message: 'Select presets to apply',
@@ -80,7 +82,7 @@ if (process.argv.length <= 2) {
   program
     .name('claude-preset')
     .description('Configure Claude Code with technology presets')
-    .version('1.0.0');
+    .version(pkg.version);
 
   program
     .command('apply <presets...>')

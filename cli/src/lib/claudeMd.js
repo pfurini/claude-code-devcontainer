@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
 
 const PRESETS_DIR = path.join('.claude', 'presets');
@@ -47,7 +47,6 @@ export async function removePresetClaudeMd(workspaceRoot, presetClaudeMd) {
   const importLine = `@${PRESETS_DIR}/${file}`;
 
   // Delete preset file
-  const { unlink } = await import('node:fs/promises');
   try {
     await unlink(presetFilePath);
   } catch {

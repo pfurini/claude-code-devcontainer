@@ -1,5 +1,5 @@
 import { access, rm, mkdir } from 'node:fs/promises';
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 
 /**
@@ -29,10 +29,26 @@ export async function applyPresetSkills(workspaceRoot, presetSkills) {
 
     try {
       console.log(`Installing skill "${skill}" from ${repo}...`);
-      execSync(`pnpm dlx skills add ${repo} --skill ${skill} -y`, {
-        cwd: workspaceRoot,
-        stdio: 'inherit',
-      });
+      const result = spawnSync(
+        'pnpm',
+        ['dlx', 'skills', 'add', repo, '--skill', skill, '-y'],
+        {
+          cwd: workspaceRoot,
+          stdio: 'inherit',
+          shell: false,
+        }
+      );
+      if (result.error) {
+        throw result.error;
+      }
+      if (result.status !== 0) {
+        const err = new Error(
+          `pnpm exited with code ${result.status ?? 'unknown'}`
+        );
+        err.status = result.status;
+        err.signal = result.signal;
+        throw err;
+      }
       console.log(`Skill "${skill}" installed successfully.`);
     } catch (err) {
       console.error(`Failed to install skill "${skill}": ${err.message}`);

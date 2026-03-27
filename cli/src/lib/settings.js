@@ -8,13 +8,17 @@ function settingsPath(workspaceRoot) {
 
 /**
  * Read project-scoped .claude/settings.json. Returns {} if missing.
+ * Throws if the file exists but cannot be read or contains invalid JSON.
  */
 export async function readSettings(workspaceRoot) {
   try {
     const raw = await readFile(settingsPath(workspaceRoot), 'utf8');
     return JSON.parse(raw);
-  } catch {
-    return {};
+  } catch (err) {
+    if (err?.code === 'ENOENT') {
+      return {};
+    }
+    throw new Error(`Failed to read/parse settings.json: ${err.message}`, { cause: err });
   }
 }
 
