@@ -1,0 +1,25 @@
+{
+  "name": "convex",
+  "version": "1.0.0",
+  "description": "Convex backend-as-a-service preset for Claude Code",
+  "settings": {
+    "permissions": {
+      "allow": [
+        "Bash(npx convex *)",
+        "Bash(npx convex dev *)"
+      ]
+    }
+  },
+  "mcpServers": {
+    "convex": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["convex", "mcp", "start"]
+    }
+  },
+  "skills": [],
+  "claudeMd": {
+    "file": "convex.md",
+    "content": "## Convex Conventions\n\n- All Convex functions live in the `convex/` directory\n- Use the correct function type: `query` for reads (reactive, cached), `mutation` for writes (transactional), `action` for side effects (external API calls, file I/O)\n- Define your schema in `convex/schema.ts` using `defineSchema` and `defineTable`\n- Always use `v` validators for function arguments (e.g., `v.string()`, `v.id(\"users\")`)\n- Add index definitions in the schema for query performance (e.g., `.index(\"by_userId\", [\"userId\"])`)\n- Use `npx convex dev` for local development with hot reload against your Convex deployment\n- In React components, use `useQuery` for reactive reads, `useMutation` for writes, and `useAction` for side effects\n- Queries must be deterministic and side-effect-free; use actions for anything non-deterministic\n- Use `ctx.db` for database operations within mutations and queries\n- Use `ctx.scheduler` to schedule functions for deferred or periodic execution"
+  }
+}
