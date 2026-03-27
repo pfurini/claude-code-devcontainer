@@ -1,0 +1,5 @@
+---
+# Hadolint configuration for claude-code-devcontainer
+# Base images are digest-pinned; apt version pinning is redundant
+ignored:
+  - DL3008  # apt-get version pinning — upstream images are digest-pinned via sha256
