@@ -1,0 +1,76 @@
+{
+  "answered": [
+    {
+      "question": "Preset storage strategy?",
+      "answer": "JSON files in cli/presets/ directory. Node.js CLI project in cli/ subdirectory with own package.json. Dockerfile copies and npm links it globally.",
+      "area": "preset-definition-format",
+      "phase": "01",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "Application semantics: merge vs replace?",
+      "answer": "Deep merge (additive). Presets merge into existing settings. Stackable with last-wins on conflicts. Tracked state with per-preset removal support.",
+      "area": "application-semantics",
+      "phase": "01",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "CLI integration model?",
+      "answer": "Command name: claude-preset. Both interactive TUI (bare command) and direct CLI (claude-preset apply <name>). On-demand only, no auto-apply.",
+      "area": "cli-integration-model",
+      "phase": "01",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "Configuration surface?",
+      "answer": "Full surface: settings, permissions, MCP servers, skills, plugins, commands, subagents, CLAUDE.md sections (via @.claude/presets/<name>.md includes). Auto-install on apply.",
+      "area": "configuration-surface",
+      "phase": "01",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "Initial preset list for v1?",
+      "answer": "NextJS + Convex. Start with 2-3, expand later.",
+      "area": "initial-presets",
+      "phase": "01",
+      "date": "2026-03-27"
+    }
+  ],
+  "inferred": [
+    {
+      "id": "REQ-07a",
+      "text": "CLI tool is a Node.js project in cli/ with npm packages, not a bash script",
+      "priority": "Must-have",
+      "source": "Discussion: preset definition format"
+    },
+    {
+      "id": "REQ-07b",
+      "text": "Presets support deep merge with state tracking for undo/removal",
+      "priority": "Must-have",
+      "source": "Discussion: application semantics"
+    },
+    {
+      "id": "REQ-07c",
+      "text": "CLAUDE.md preset content uses @include pattern from separate files",
+      "priority": "Must-have",
+      "source": "Discussion: configuration surface"
+    }
+  ],
+  "deferred": [
+    {
+      "idea": "Additional presets: Postgres, Expo, general-dev, minimal",
+      "mentioned_during": "Phase 1 discussion",
+      "date": "2026-03-27"
+    },
+    {
+      "idea": "Auto-apply presets via CLAUDE_PRESET env var",
+      "mentioned_during": "Phase 1 discussion",
+      "date": "2026-03-27"
+    },
+    {
+      "idea": "Preset composition (named combos like fullstack = nextjs + postgres)",
+      "mentioned_during": "Phase 1 discussion",
+      "date": "2026-03-27"
+    }
+  ]
+}
