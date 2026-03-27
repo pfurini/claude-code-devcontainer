@@ -7,13 +7,13 @@
 ## Progress
 | Phase | Status | Plans | Tasks | Commits |
 |-------|--------|-------|-------|---------|
-| 01 | ○ Planned |
+| 01 | ✓ Built | 4 | 13 | 13 |
 | 2 | Pending | 0 | 0 | 0 |
 
 ---
 
 ## Phase List
-- [ ] [Phase 1: Preset CLI](#phase-1-preset-cli)
+- [x] [Phase 1: Preset CLI](#phase-1-preset-cli)
 - [ ] [Phase 2: Core Hardening](#phase-2-core-hardening)
 
 ---
