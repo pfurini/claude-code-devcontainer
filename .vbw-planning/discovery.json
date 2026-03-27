@@ -35,6 +35,34 @@
       "phase": "01",
       "date": "2026-03-27"
     }
+    {
+      "question": "Test framework for install.sh?",
+      "answer": "ShellCheck + raw shell assertions. Zero external dependencies. Two-tier: pure logic tests always, Docker integration gated on DOCKER_AVAILABLE.",
+      "area": "test-strategy",
+      "phase": "03",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "CI pipeline design?",
+      "answer": "GitHub Actions. Single workflow with jobs: lint (ShellCheck), test (unit tests), security (hadolint + security checks). No container build in CI.",
+      "area": "ci-pipeline",
+      "phase": "03",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "Security audit scope?",
+      "answer": "Automated checks only. ShellCheck security rules, hadolint, verify SYS_ADMIN blocked, .devcontainer/ read-only, deny rules in settings.json.",
+      "area": "security-audit",
+      "phase": "03",
+      "date": "2026-03-27"
+    },
+    {
+      "question": "Test coverage boundaries?",
+      "answer": "Critical paths only: extract_mounts_to_file, cmd_sync, discover_resources, check_no_sys_admin, arg parsing. Minimal refactoring with source guard.",
+      "area": "test-coverage",
+      "phase": "03",
+      "date": "2026-03-27"
+    }
   ],
   "inferred": [
     {
@@ -57,6 +85,11 @@
     }
   ],
   "deferred": [
+    {
+      "idea": "Container build verification in CI (devcontainer build as a CI step)",
+      "mentioned_during": "Phase 3 discussion",
+      "date": "2026-03-27"
+    },
     {
       "idea": "Additional presets: Postgres, Expo, general-dev, minimal",
       "mentioned_during": "Phase 1 discussion",
