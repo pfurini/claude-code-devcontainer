@@ -1,0 +1,14 @@
+{
+  "name": "claude-preset",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CLI tool for configuring Claude Code with presets",
+  "bin": {
+    "claude-preset": "./src/index.js"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "@clack/prompts": "^0.9.0",
+    "deepmerge": "^4.3.1"
+  }
+}
