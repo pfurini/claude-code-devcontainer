@@ -1,6 +1,6 @@
 {
   "name": "nextjs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Next.js App Router preset for Claude Code",
   "settings": {
     "permissions": {
@@ -21,6 +21,14 @@
     }
   },
   "skills": [],
+  "plugins": [
+    {
+      "name": "typescript-lsp",
+      "marketplace": "claude-plugins-official",
+      "scope": "project"
+    }
+  ],
+  "marketplaces": {},
   "claudeMd": {
     "file": "nextjs.md",
     "content": "## Next.js Conventions\n\n- Always use App Router (`app/` directory), not Pages Router\n- Components are Server Components by default; add `\"use client\"` only when you need browser APIs, event handlers, or React state/effects\n- Use `next/image` for all images (automatic optimization) and `next/link` for client-side navigation\n- API endpoints go in Route Handlers at `app/api/` (e.g., `app/api/users/route.ts`)\n- Prefer Server Actions for data mutations over API routes when possible\n- Use `loading.tsx` for streaming/suspense fallbacks, `error.tsx` for error boundaries, and `not-found.tsx` for 404 states in each route segment\n- Collocate related files in the same directory: component, styles, tests, and utilities together\n- Use `generateMetadata` or `metadata` export for per-page SEO\n- Fetch data in Server Components using `async/await` directly; avoid `useEffect` for data fetching\n- Use `revalidatePath` or `revalidateTag` for on-demand ISR cache invalidation"
