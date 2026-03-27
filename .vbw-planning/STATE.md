@@ -4,10 +4,10 @@
 **Milestone:** claude-code-devcontainer
 
 ## Current Phase
-Phase: 1 of 2 (Preset Cli)
+Phase: 2 of 2 (Core Hardening)
 Plans: 4/4 complete
 Progress: 100%
-Status: needs_remediation
+Status: ready
 
 ## Phase Status
 - **Phase 1:** ✓ Built (4 plans, 13 tasks, 13 commits) — QA PASS (24/25)

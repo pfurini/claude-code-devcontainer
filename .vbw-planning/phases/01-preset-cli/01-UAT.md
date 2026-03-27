@@ -1,12 +1,12 @@
 ---
 phase: 01
-status: issues_found
+status: complete
 started: 2026-03-27
-completed:
+completed: 2026-03-27
 tests_total: 3
-tests_passed: 0
-tests_failed: 1
-tests_skipped: 2
+tests_passed: 3
+tests_failed: 0
+tests_skipped: 0
 ---
 
 # Phase 01: Preset CLI — UAT
@@ -17,7 +17,7 @@ tests_skipped: 2
 
 **Expected:** The TUI is intuitive — presets are clearly labeled with descriptions, selection works smoothly, and cancelling exits gracefully without errors.
 
-**Result:** SKIP — Cannot test until container builds
+**Result:** PASS
 
 ---
 
@@ -27,14 +27,14 @@ tests_skipped: 2
 
 **Expected:** The generated configuration files are well-structured, the CLAUDE.md guidance for Next.js App Router is practical and accurate (covers Server Components, Route Handlers, Server Actions, etc.), and the overall preset looks useful for a real Next.js project.
 
-**Result:** SKIP — Cannot test until container builds
+**Result:** PASS
 
 ---
 
 ## P03-T03: Container Build with claude-preset
 
-**Scenario:** Docker build fails with `"/cli": not found` because `install.sh cmd_template()` copies Dockerfile, devcontainer.json, post_install.py, and .zshrc to `.devcontainer/` but not `cli/`. The devcontainer build context defaults to `.devcontainer/` so COPY can't find `cli/`.
+**Scenario:** Build the container after the install.sh fix (added `cp -r "$SCRIPT_DIR/cli" "$devcontainer_dir/"` to `cmd_template()`). The container should build successfully with claude-preset available on PATH via npm link.
 
 **Expected:** Container builds successfully with claude-preset CLI installed and available on PATH.
 
-**Result:** FAIL — `/cli` not found in build context. Root cause: `install.sh` missing `cp -r "$SCRIPT_DIR/cli" "$devcontainer_dir/"` in `cmd_template()`. **Severity: critical** (container cannot build at all).**
+**Result:** PASS (after fix: `install.sh` was missing `cp -r "$SCRIPT_DIR/cli" "$devcontainer_dir/"` in `cmd_template()`)
