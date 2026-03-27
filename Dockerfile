@@ -120,10 +120,7 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$FNM_D
 RUN export PATH="$FNM_DIR:$PATH" && \
   eval "$(fnm env)" && \
   npx playwright install chromium && \
-  CHROMIUM_PATH="$(find /home/vscode/.cache/ms-playwright -type f -name 'chrome' -o -name 'chromium' | head -1)" && \
-  echo "Found chromium at: $CHROMIUM_PATH" && \
-  ls -la "$CHROMIUM_PATH" && \
-  ln -s "$CHROMIUM_PATH" /home/vscode/.chromium
+  ln -s "$(find /home/vscode/.cache/ms-playwright -type f \( -name 'chrome' -o -name 'chromium' \) | head -1)" /home/vscode/.chromium
 ENV AGENT_BROWSER_EXECUTABLE_PATH="/home/vscode/.chromium"
 
 # Install Homebrew
