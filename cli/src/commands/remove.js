@@ -2,6 +2,7 @@ import { removePresetSettings } from '../lib/settings.js';
 import { removePresetMcp } from '../lib/mcp.js';
 import { removePresetClaudeMd } from '../lib/claudeMd.js';
 import { removePresetSkills } from '../lib/skills.js';
+import { removePresetPlugins } from '../lib/plugins.js';
 import { loadState, saveState, removeApplied } from '../lib/state.js';
 
 /**
@@ -35,6 +36,10 @@ export async function removeCommand(presetName) {
 
     if (snapshot.skills && snapshot.skills.length > 0) {
       await removePresetSkills(workspaceRoot, snapshot.skills);
+    }
+
+    if (snapshot.plugins && snapshot.plugins.length > 0) {
+      await removePresetPlugins(workspaceRoot, snapshot.plugins, snapshot.marketplaces ?? {});
     }
 
     await saveState(workspaceRoot, state);

@@ -4,6 +4,7 @@ import { applyPresetSettings } from '../lib/settings.js';
 import { applyPresetMcp } from '../lib/mcp.js';
 import { applyPresetClaudeMd } from '../lib/claudeMd.js';
 import { applyPresetSkills } from '../lib/skills.js';
+import { applyPresetPlugins } from '../lib/plugins.js';
 import { loadState, saveState, isApplied, addApplied, ensureGitignore } from '../lib/state.js';
 
 const presetsDir = new URL('../../presets/', import.meta.url);
@@ -65,6 +66,10 @@ export async function applyCommand(presetNames) {
 
       if (preset.skills && preset.skills.length > 0) {
         await applyPresetSkills(workspaceRoot, preset.skills);
+      }
+
+      if (preset.plugins && preset.plugins.length > 0) {
+        await applyPresetPlugins(workspaceRoot, preset.plugins, preset.marketplaces ?? {});
       }
 
       addApplied(state, name, preset.version, preset);
