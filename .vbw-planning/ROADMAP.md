@@ -2,19 +2,21 @@
 
 **Goal:** claude-code-devcontainer
 
-**Scope:** 2 phases
+**Scope:** 3 phases
 
 ## Progress
 | Phase | Status | Plans | Tasks | Commits |
 |-------|--------|-------|-------|---------|
-| 01 | ● Done |
-| 2 | Pending | 0 | 0 | 0 |
+| 01 | ✓ Built | 4 | 13 | 13 |
+| 02 | Pending | 0 | 0 | 0 |
+| 03 | Pending | 0 | 0 | 0 |
 
 ---
 
 ## Phase List
 - [x] [Phase 1: Preset CLI](#phase-1-preset-cli)
-- [ ] [Phase 2: Core Hardening](#phase-2-core-hardening)
+- [ ] [Phase 2: Plugin Support](#phase-2-plugin-support)
+- [ ] [Phase 3: Core Hardening](#phase-3-core-hardening)
 
 ---
 
@@ -33,7 +35,24 @@
 
 ---
 
-## Phase 2: Core Hardening
+## Phase 2: Plugin Support
+
+**Goal:** Add Claude Code plugin installation and management to the preset CLI, so presets can specify plugins to install from marketplaces
+
+**Requirements:** REQ-08
+
+**Success Criteria:**
+- Preset JSON schema supports a `plugins` field with marketplace, name, and scope
+- `claude-preset apply` installs specified plugins via `claude plugin install`
+- `claude-preset remove` uninstalls plugins that were added by the preset
+- Plugin state is tracked in `.preset-state.json` snapshots for clean removal
+- Both v1 presets (nextjs, convex) are updated with relevant plugins if available
+
+**Dependencies:** Phase 1
+
+---
+
+## Phase 3: Core Hardening
 
 **Goal:** Improve container security, add testing, and set up CI/CD pipeline
 
@@ -44,5 +63,4 @@
 - CI pipeline runs on PR
 - Security audit checklist passes
 
-**Dependencies:** Phase 1
-
+**Dependencies:** Phase 2
