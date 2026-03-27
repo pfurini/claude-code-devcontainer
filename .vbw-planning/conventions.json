@@ -1,0 +1,39 @@
+{
+  "conventions": [
+    {
+      "id": "bash-strict-mode",
+      "rule": "All bash scripts use set -euo pipefail",
+      "source": "CONVENTIONS.md"
+    },
+    {
+      "id": "cmd-prefix",
+      "rule": "CLI subcommands are implemented as cmd_* functions in install.sh",
+      "source": "PATTERNS.md"
+    },
+    {
+      "id": "colored-logging",
+      "rule": "Use log_info/log_success/log_warn/log_error for CLI output",
+      "source": "CONVENTIONS.md"
+    },
+    {
+      "id": "destructive-confirmation",
+      "rule": "Destructive operations require user confirmation prompts",
+      "source": "CONVENTIONS.md"
+    },
+    {
+      "id": "readonly-mounts",
+      "rule": "Security-sensitive paths mounted read-only in devcontainer",
+      "source": "ARCHITECTURE.md"
+    },
+    {
+      "id": "version-pinning",
+      "rule": "External tool versions pinned via Docker ARGs",
+      "source": "PATTERNS.md"
+    },
+    {
+      "id": "no-test-suite",
+      "rule": "No automated tests — validate via manual devcontainer build/up",
+      "source": "TESTING.md"
+    }
+  ]
+}
