@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ShellCheck
+        run: which shellcheck || sudo apt-get install -y shellcheck
+      - name: Lint install.sh
+        run: shellcheck -s bash -e SC2034 install.sh
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: which jq || sudo apt-get install -y jq
+      - name: Run unit tests
+        run: bash tests/test_install.sh
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: which jq || sudo apt-get install -y jq
+      - name: Install hadolint
+        run: |
+          wget -qO /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x /tmp/hadolint
+          sudo mv /tmp/hadolint /usr/local/bin/hadolint
+      - name: Lint Dockerfile
+        run: hadolint Dockerfile
+      - name: Run security tests
+        run: bash tests/test_security.sh
