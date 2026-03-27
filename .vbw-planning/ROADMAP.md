@@ -8,14 +8,14 @@
 | Phase | Status | Plans | Tasks | Commits |
 |-------|--------|-------|-------|---------|
 | 01 | ✓ Built | 4 | 13 | 13 |
-| 02 | ○ Planned |
+| 02 | ✓ Built | 3 | 7 | 3 |
 | 03 | Pending | 0 | 0 | 0 |
 
 ---
 
 ## Phase List
 - [x] [Phase 1: Preset CLI](#phase-1-preset-cli)
-- [ ] [Phase 2: Plugin Support](#phase-2-plugin-support)
+- [x] [Phase 2: Plugin Support](#phase-2-plugin-support)
 - [ ] [Phase 3: Core Hardening](#phase-3-core-hardening)
 
 ---
