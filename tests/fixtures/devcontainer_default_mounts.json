@@ -1,0 +1,12 @@
+{
+  "mounts": [
+    "source=devc-myproject-bashhistory-abc123,target=/commandhistory,type=volume",
+    "source=devc-myproject-config-abc123,target=/home/vscode/.claude,type=volume",
+    "source=devc-myproject-gh-abc123,target=/home/vscode/.config/gh,type=volume",
+    "source=/home/user/.gitconfig,target=/home/vscode/.gitconfig,type=bind,readonly",
+    "source=/workspace/.devcontainer,target=/workspace/.devcontainer,type=bind,readonly",
+    "source=/home/user/.agents,target=/home/vscode/.agents,type=bind,readonly",
+    "source=/home/user/.claude/CLAUDE.md,target=/home/vscode/.claude/CLAUDE.md,type=bind",
+    "source=/home/user/.claude/skills,target=/home/vscode/.claude/skills,type=bind,readonly"
+  ]
+}

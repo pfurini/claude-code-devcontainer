@@ -1,0 +1,5 @@
+{
+  "mounts": [
+    "source=/data,target=/workspace/data,type=bind"
+  ]
+}
